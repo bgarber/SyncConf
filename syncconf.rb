@@ -19,10 +19,34 @@ include CommandLine
 
 VERSION = 0.1
 
+# Declaration of constants to use with the saved data.
+HOST_OPTION = "host"
+USERNAME_OPTION = "username"
+NAME_OPTION = "name"
+SAVED_FILE_OPTION = "saved_file"
+
+class SavedData
+    def initialize ()
+        home_dir = %[echo $HOME]
+        @file = "#{home_dir}/.syncconfrc"
+    end
+
+    def create (host, user, name)
+        fd = File.new(@file, "w+") # This will truncate the file
+        fd << HOST_OPTION + " = #{host}")
+        fd << USERNAME_OPTION + " = #{user}")
+        fd << NAME_OPTION + " = #{name}")
+        fd.close
+    end
+end
+
 class ProcessCommand
     def initialize ()
         @command = "help"
         @options = Array.new #Start an empty array for the command options
+
+        @sd = SavedData.new
+
         @user = "default"
         @host = "my-host"
         @name = "my-things"
@@ -45,11 +69,7 @@ class ProcessCommand
     end
 
     def fetch_conf ()
-        %[scp #{@user}@#{@host}]
-    end
-
-    def start_sync ()
-
+        %[scp #{@user}@#{@host}:~/#{@name}/file]
     end
 
     def execute ()
@@ -57,7 +77,7 @@ class ProcessCommand
             when "help"
                 print_help
             when "start"
-                start_sync
+                @sd.create
             when "fetch"
                 fetch_conf
             else
@@ -74,6 +94,7 @@ if ARGV.length == 0 then
     pc.print_help
 end
 
+# Process the command line argumens; this can improve.
 ARGV.length.times { |i|
     if i == 0 then # The first one is the command
         pc.command = ARGV[i]
