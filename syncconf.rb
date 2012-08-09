@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Inserting command line processing.
-require 'commandline/optionparser'
-include CommandLine
+#require 'commandline/optionparser'
+#include CommandLine
 
 VERSION = 0.1
 
@@ -33,9 +33,9 @@ class SavedData
 
     def create (host, user, name)
         fd = File.new(@file, "w+") # This will truncate the file
-        fd << HOST_OPTION + " = #{host}")
-        fd << USERNAME_OPTION + " = #{user}")
-        fd << NAME_OPTION + " = #{name}")
+        fd << HOST_OPTION + " = #{host}"
+        fd << USERNAME_OPTION + " = #{user}"
+        fd << NAME_OPTION + " = #{name}"
         fd.close
     end
 end
@@ -92,15 +92,14 @@ pc = ProcessCommand.new()
 
 if ARGV.length == 0 then
     pc.print_help
+else
+    # Process the command line argumens; this can improve.
+    ARGV.length.times { |i|
+        if i == 0 then # The first one is the command
+            pc.command = ARGV[i]
+        end
+    }
+
+    pc.execute
 end
-
-# Process the command line argumens; this can improve.
-ARGV.length.times { |i|
-    if i == 0 then # The first one is the command
-        pc.command = ARGV[i]
-    end
-}
-
-
-pc.execute
 
