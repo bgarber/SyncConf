@@ -74,7 +74,7 @@ class ProcessCommand
         puts "    start\tStart synchronizing configurations."
         puts "    fetch\tFetch remote configuration files."
         puts "    send\tSend configuration to a remote repository."
-        puts "    add\tAdd a configuration file to the backup system."
+        puts "    add \tAdd a configuration file to the backup system."
     end
 
     # Uses algorithms to get the stored data.
