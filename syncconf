@@ -20,7 +20,7 @@
 RUBY=/usr/bin/ruby
 
 if [ -n $RUBY ]; then
-    $RUBY syncconf.rb $1 $2 $3
+    $RUBY syncconf.rb $@
 else
     echo "I haven't found Ruby. If you're sure that Ruby is installed, try" \
         "editing this Shell Script."
