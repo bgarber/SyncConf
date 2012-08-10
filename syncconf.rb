@@ -25,14 +25,19 @@ USERNAME_OPTION = "username"
 NAME_OPTION = "name"
 SAVED_FILE_OPTION = "saved_file"
 
+# Stores and manipulates useful info for the tool. This class creates the a
+# file located at the user HOME directory.
 class SavedData
     def initialize ()
         home_dir = %[echo $HOME]
         @file = "#{home_dir}/.syncconfrc"
     end
 
+    # This function will create a brand new file for storing informations
+    # about the user. NOTE: this will ERASE the current file and CREATE a
+    # new one. This was done purposedly!
     def create (host, user, name)
-        fd = File.new(@file, "w+") # This will truncate the file
+        fd = File.new(@file, "w+")
         fd << HOST_OPTION + " = #{host}"
         fd << USERNAME_OPTION + " = #{user}"
         fd << NAME_OPTION + " = #{name}"
@@ -40,6 +45,9 @@ class SavedData
     end
 end
 
+
+# A class encapsulating the methods to fetch, send and add files to
+# SyncConf.
 class ProcessCommand
     def initialize ()
         @command = "help"
@@ -52,6 +60,11 @@ class ProcessCommand
         @name = "my-things"
     end
 
+    def command= (cmd)
+        @command = cmd
+    end
+
+    # Straight forward: prints the help text for the tool.
     def print_help ()
         puts "This is SyncConf, version #{VERSION}!"
         puts ""
@@ -64,14 +77,12 @@ class ProcessCommand
         puts "    add\tAdd a configuration file to the backup system."
     end
 
-    def command= (cmd)
-        @command = cmd
-    end
-
+    # Uses algorithms to get the stored data.
     def fetch_conf ()
         %[scp #{@user}@#{@host}:~/#{@name}/file]
     end
 
+    # Executes a configured command.
     def execute ()
         case @command
             when "help"
@@ -87,6 +98,8 @@ class ProcessCommand
         end
     end
 end
+
+# === MAIN ===
 
 pc = ProcessCommand.new()
 
