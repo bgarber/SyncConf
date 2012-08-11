@@ -84,7 +84,7 @@ class ProcessCommand
 
     # Uses algorithms to get the stored data.
     def fetch_conf ()
-        %[scp #{@user}@#{@addr}:~/#{@name}/file]
+        %x[scp #{@user}@#{@addr}:~/#{@name}/file]
     end
 
     # Executes a configured command.
