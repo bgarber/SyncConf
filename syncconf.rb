@@ -77,11 +77,6 @@ class ProcessCommand
         @options = opts
     end
 
-    # Straight forward: prints the help text for the tool.
-    def print_help ()
-        puts @options
-    end
-
     # Uses algorithms to get the stored data.
     def fetch_conf ()
         %x[scp #{@user}@#{@addr}:~/#{@name}/file]
@@ -143,9 +138,11 @@ opts = OptionParser.new do |opts|
     end
 
     opts.on_tail("-h", "--help", "Prints this help!") do
-        pc.print_help
+        puts opts
         exit
     end
+
+    pc.options = opts
 end
 
 opts.parse!(arguments)
