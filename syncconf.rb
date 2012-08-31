@@ -86,7 +86,7 @@ class ProcessCommand
     def execute ()
         case @command
             when "help"
-                print_help
+                puts @options
             when "start"
                 @sd.create(@addr, @user, @name)
             when "fetch"
@@ -94,7 +94,7 @@ class ProcessCommand
             else
                 puts "Unknown/Invalid command: \"#{@command}\"!"
                 puts ""
-                print_help
+                puts @options
         end
     end
 end
@@ -106,7 +106,6 @@ if ARGV.length > 0 and not ARGV[0] =~ /^-/ then
     cmd = ARGV[0]
     arguments = ARGV[1..ARGV.length - 1] # Exclude the first argument.
 else
-    puts "Missing command!"
     cmd = "help"
     arguments = ARGV
 end
@@ -146,8 +145,6 @@ opts = OptionParser.new do |opts|
 end
 
 opts.parse!(arguments)
-
-pc.options = opts
 
 pc.execute
 
