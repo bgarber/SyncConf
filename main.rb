@@ -56,3 +56,13 @@ if do_conf_flush then
     conf.flush
 end
 
+if conf.dir == "" or conf.type == "" then
+    puts "Could not identify any directory or checkout type!"
+    puts "Configured directory: #{conf.dir}"
+    puts "Configured repository type: #{conf.type}"
+    puts "Try calling SyncConf with \"-d\" and/or \"-c\" parameters."
+    puts "For more information, type:"
+    puts "\tsyncconf -h"
+    exit
+end
+
