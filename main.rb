@@ -16,19 +16,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'optparse'
+require './OpenConf.rb'
+
+CHECKOUT_TYPE_GIT = "git"
+CHECKOUT_TYPE_SVN = "svn"
 
 conf = OpenConf.new
 
+do_conf_flush = false
+
 opts = OptionParser.new do |opts|
     opts.banner = "This is SyncConf, a configuration manager!\n\n"
-    opts.banner << "Usage: syncconf [options]\n\n"
+    opts.banner << "Usage: syncconf [options]\n"
 
-    opts.on("-c", "--conf FILE", "Change the default SyncConf configuration file.") do |conf|
-        conf.file = conf
+    opts.on("-d", "--directory DIR", "Change the checkout directory.") do |d|
+        conf.dir = d
+        do_conf_flush = true
     end
 
-    opts.on("-d", "--directory DIR", "Change the checkout directory.") do |dir|
-        conf.write(dir)
+    opts.on("-t", "--type TYPE", "Type of the checkout: git or svn.") do |t|
+        if t.casecmp(CHECKOUT_TYPE_GIT) == 0 or t.casecmp(CHECKOUT_TYPE_SVN) == 0
+            conf.type = t
+            do_conf_flush = true
+        else
+            puts "Type not recognized: #{t}"
+            exit
+        end
     end
 
     opts.on_tail("-h", "--help", "Prints this help!") do
@@ -39,4 +52,7 @@ end
 
 opts.parse!(ARGV)
 
+if do_conf_flush then
+    conf.flush
+end
 

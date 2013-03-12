@@ -13,32 +13,51 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-DEFAULT_CONF_PATH = "~/.syncconfrc"
+DEFAULT_CONF_PATH = ENV['HOME'] + "/.syncconfrc"
+
+DIRECTORY_LOCATION = "directory_location"
+REPOSITORY_TYPE = "repository_type"
 
 # This class reads and writes configuration data. In reality, there's only one
 # data to store: the checkout location. Is an acceptable thing that we have only
 # one configuration to encapsulate other configurations.
 class OpenConf
+    attr_accessor :dir, :type
+
 public
     def initialize
-        @file = DEFAULT_CONF_PATH
+        @dir = ""
+        @type = ""
+
+        if File.exists?(DEFAULT_CONF_PATH) then
+            File.open(DEFAULT_CONF_PATH, "r") { |fd|
+                while line = fd.gets
+                    str_arr = line.split("=")
+
+                    if str_arr.length > 0 then
+                        item = str_arr[0].strip
+                        value = str_arr[1].strip
+
+                        if item.casecmp(DIRECTORY_LOCATION) then
+                            @dir = value
+                        elsif item.casecmp(REPOSITORY_TYPE) then
+                            @type = value
+                        end
+                    end
+                end
+            }
+        else
+            File.open(DEFAULT_CONF_PATH, "w+") { |fd|
+                fd << "<empty>\n"
+            }
+        end
     end
 
-    def file= (f)
-        @file = f
-    end
-
-    def read
-        fd = File.new(@file, "r")
-        dir = fd.gets
-        fd.close
-        return dir
-    end
-
-    def write (dir)
-        fd = File.new(@file, "w")
-        fd << "#{dir}\n"
-        fd.close
+    def flush
+        File.open(DEFAULT_CONF_PATH, "w+") { |fd|
+            fd << DIRECTORY_LOCATION + " = #{@dir}\n"
+            fd << REPOSITORY_TYPE + " = #{@type}\n"
+        }
     end
 end
 
