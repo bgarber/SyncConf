@@ -1,4 +1,4 @@
-# Copyright            2012        Bryan Garber da Silva
+# Copyright 2012-2013    Bryan Garber da Silva   <spellcasterbryan@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Inserting command line processing.
-require 'optparse'
 
 VERSION = 0.1
 
@@ -112,39 +110,6 @@ end
 
 pc = ProcessCommand.new(cmd)
 
-opts = OptionParser.new do |opts|
-    opts.banner = "This is SyncConf, version #{VERSION}!\n\n"
-    opts.banner << "Usage: syncconf <command> [options]\n\n"
-    opts.banner << "Commands available:\n"
-    opts.banner << "    start\tStart synchronizing configurations.\n"
-    opts.banner << "    fetch\tFetch remote configuration files.\n"
-    opts.banner << "    send\tSend configuration to a remote repository.\n"
-    opts.banner << "    add \tAdd a configuration file to the backup system.\n"
-
-    opts.separator ""
-    opts.separator "Options available:"
-
-    opts.on("-u", "--user USERNAME", "Username of the remote directory.") do |user|
-        pc.user = user
-    end
-
-    opts.on("-a", "--addr ADDRESS", "Address where to save configurations.") do |addr|
-        pc.addr = addr
-    end
-
-    opts.on("-n", "--name NAME", "The label for the configurations saved.") do |name|
-        pc.name = name
-    end
-
-    opts.on_tail("-h", "--help", "Prints this help!") do
-        puts opts
-        exit
-    end
-
-    pc.options = opts
-end
-
-opts.parse!(arguments)
 
 pc.execute
 
